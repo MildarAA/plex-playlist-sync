@@ -137,3 +137,4 @@ Notebooks/
 .*.py
 
 start.bat
+output/
