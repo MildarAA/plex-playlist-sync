@@ -23,7 +23,7 @@ def sort_playlist_into_albums(playlist: Playlist, tracks: list[Track], userInput
 		for track in tracks:
 			i=i+1
 			filename = track.title + ".mp3"
-			filename = filename.replace('"','\'')
+			filename = filename.replace('"','\'').replace("/","")
 			org_path = os.path.join(playlist_folder,filename) 
 			if os.path.isfile(org_path):
 				new_path = os.path.join(userInputs.plex_folder.replace('"', ''), re.sub(r'[\\/*?:"<>|]',"_",track.artist), re.sub(r'[\\/*?:"<>|]',"_",track.album),filename)
