@@ -1,11 +1,13 @@
 import logging
 from typing import List
+import time
 
 import spotipy
 from plexapi.server import PlexServer
 
 from .helperClasses import Playlist, Track, UserInputs
 from .plex import update_or_create_plex_playlist
+from .downloader import downloadPlaylist,sort_playlist_into_albums
 
 
 def _get_sp_user_playlists(
@@ -31,9 +33,11 @@ def _get_sp_user_playlists(
                     name=playlist["name"] + suffix,
                     description=playlist.get("description", ""),
                     # playlists may not have a poster in such cases return ""
+                    url=playlist["external_urls"].get("spotify",""),
                     poster=""
                     if len(playlist["images"]) == 0
                     else playlist["images"][0].get("url", ""),
+                    
                 )
             )
     except:
@@ -106,6 +110,11 @@ def spotify_playlist_sync(
             tracks = _get_sp_tracks_from_playlist(
                 sp, userInputs.spotify_user_id, playlist
             )
+            downloadPlaylist(playlist,userInputs)
+            sort_playlist_into_albums(playlist,tracks,userInputs)
+            #wait for plex to process tracks before adding them
+            logging.info("waiting 60s for Plex to scan new tracks")
+            time.sleep(60)
             update_or_create_plex_playlist(plex, playlist, tracks, userInputs)
     else:
         logging.error("No spotify playlists found for given user")

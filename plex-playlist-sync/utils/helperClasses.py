@@ -15,6 +15,7 @@ class Playlist:
     name: str
     description: str
     poster: str
+    url: str
 
 
 @dataclass
@@ -35,3 +36,6 @@ class UserInputs:
 
     deezer_user_id: str
     deezer_playlist_ids: str
+
+    plex_folder: str
+    download_folder: str

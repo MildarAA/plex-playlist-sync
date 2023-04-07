@@ -63,19 +63,27 @@ def _get_available_plex_tracks(plex: PlexServer, tracks: List[Track]) -> List:
     for track in tracks:
         search = []
         try:
-            search = plex.search(track.title, mediatype="track", limit=5)
+            search = plex.search(track.title, mediatype="track", limit=20)
         except BadRequest:
             logging.info("failed to search %s on plex", track.title)
-        if (not search) or len(track.title.split("(")) > 1:
+        if (not search) and (len(track.title.split("(")) > 1 or len(track.title.split("-")) > 1):
             logging.info("retrying search for %s", track.title)
             try:
                 search += plex.search(
-                    track.title.split("(")[0], mediatype="track", limit=5
-                )
-                logging.info("search for %s successful", track.title)
+                    track.title.split("(")[0], mediatype="track", limit=20)
+                if (not search) and len(track.title.split("-")) > 1:
+                    logging.info("retrying search for %s", track.title)
+                    try:
+                        search += plex.search(
+                            track.title.split("-")[0].split("(")[0], mediatype="track", limit=20)
+                    except BadRequest:
+                        logging.info("unable to query %s on plex", track.title)
             except BadRequest:
                 logging.info("unable to query %s on plex", track.title)
-
+        if search:
+            logging.info("search for %s successful", track.title)
+        else:
+            logging.warn("search for %s unsucessful", track.title)
         found = False
         if search:
             for s in search:
@@ -105,6 +113,7 @@ def _get_available_plex_tracks(plex: PlexServer, tracks: List[Track]) -> List:
                         track.title,
                     )
         if not found:
+            logging.warn("Track not found on plex:" + track.title)
             missing_tracks.append(track)
 
     return plex_tracks, missing_tracks

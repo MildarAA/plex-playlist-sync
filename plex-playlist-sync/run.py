@@ -26,6 +26,8 @@ userInputs = UserInputs(
     spotify_user_id=os.getenv("SPOTIFY_USER_ID"),
     deezer_user_id=os.getenv("DEEZER_USER_ID"),
     deezer_playlist_ids=os.getenv("DEEZER_PLAYLIST_ID"),
+    plex_folder = os.getenv("PLEX_FOLDER"),
+    download_folder = os.getenv("DOWNLOAD_FOLDER")
 )
 while True:
     logging.info("Starting playlist sync")
@@ -75,10 +77,6 @@ while True:
 
     ########## DEEZER SYNC ##########
 
-    logging.info("Starting Deezer playlist sync")
-    dz = deezer.Client()
-    deezer_playlist_sync(dz, plex, userInputs)
-    logging.info("Deezer playlist sync complete")
 
     logging.info("All playlist(s) sync complete")
     logging.info("sleeping for %s seconds" % userInputs.wait_seconds)
