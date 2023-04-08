@@ -13,7 +13,10 @@ def downloadPlaylist(playlist : Playlist,userInputs : UserInputs ):
 		if not os.path.isdir(playlist_folder):
 			os.makedirs(playlist_folder)
 		output = os.path.join(playlist_folder,r"{title}")
-		subprocess.run(["spotdl","sync", playlist.url, "--save-file","sync.spotdl", "--output", output],cwd=playlist_folder)
+		try:
+			subprocess.run(["spotdl","sync", playlist.url, "--save-file","sync.spotdl", "--output", output],cwd=playlist_folder, timeout=3600 )
+		except:
+			logging.error("Error in spotdl downloading. Probably stuck downloader that may fix itselve by restart")
 
 def sort_playlist_into_albums(playlist: Playlist, tracks: list[Track], userInputs : UserInputs):
 	#sort downloaded into albums
