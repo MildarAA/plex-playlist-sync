@@ -1,3 +1,11 @@
+# Plex Spotify Playlist Sync - with SpotDL as downloader!
+This fork is based on great plex playlist sync from rnagabhyrava https://github.com/rnagabhyrava/plex-playlist-sync.
+It removes Deezer (as I do not need it. but should be actually compatible) and adds ability to download files
+It need 2 folders. A place where SpotDL downloads files and Plex music folder. So add these to final enviroment configuration:
+PLEX_FOLDER - Plex Music library - It will be sorted by default way /Plex_folder/Artist/Album/Track
+DOWNLOAD_FOLDER - Download folder - It will by sorted by playlist
+While both folders have the same songs for repeated usability of this tool they will not use twice as much space. They are hard link, not copies of files.  
+
 # Plex Playlist Sync
 
 Create spotify and deezer playlists in your plex account using tracks from your server and keeps plex playlists in sync with original playlists. 
